@@ -3,6 +3,8 @@
 # version: 0.2
 # authors: Code for South Africa (@code4sa)
 
+gem 'mailchimp-api', '2.0.6', require_name: 'mailchimp'
+
 after_initialize do
 
   # allow embedding through topic ids or URLs
@@ -25,4 +27,49 @@ after_initialize do
     end
   end
 
+  require 'mailchimp'
+  require 'time'
+
+  class UserMailChimpObserver < ActiveRecord::Observer
+    # register users with mailchimp
+    observe :user
+
+    def initialize(*args)
+      super(*args)
+
+      @client = Mailchimp::API.new(ENV['MAILCHIMP_API_KEY'])
+      @list_id = ENV['MAILCHIMP_LIST_ID']
+
+      if @list_id.empty?
+        raise ArgumentError.new("Please set the MAILCHIMP_LIST_ID environment variable.")
+      end
+    end
+
+    def after_create(user)
+      register_user(user)
+    end
+
+    def after_destroy(user)
+      unregister_user(user)
+    end
+
+    def register_user(user)
+      if user.email and user.email != 'no_email' and user.has_attribute?('ip_address')
+        Rails.logger.info("Registering user with MailChimp: #{user.email} from #{user.ip_address}")
+
+        res = @client.lists.subscribe(@list_id, {email: user.email}, {
+                                optin_ip: user.ip_address,
+                                optin_time: Time.now.iso8601},
+                                'html', false, true)
+
+        Rails.logger.info("Result: #{res}")
+      end
+    end
+
+    def unregister_user(user)
+      # TODO
+    end
+  end
+
+  User.add_observer UserMailChimpObserver.instance
 end
