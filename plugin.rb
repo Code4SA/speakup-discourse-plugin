@@ -1,10 +1,11 @@
-# name: embed-by-topic-id
-# about: embed discourse topics by id
-# version: 0.1
-# authors: Greg Kempe @longhotsummer
+# name: Speak Up Discourse Plugin
+# about: Extra features for Speak Up Discourse
+# version: 0.2
+# authors: Code for South Africa (@code4sa)
 
 after_initialize do
 
+  # allow embedding through topic ids or URLs
   TopicEmbed.class_eval do
     class << self
       alias_method :old_topic_id_for_embed, :topic_id_for_embed
