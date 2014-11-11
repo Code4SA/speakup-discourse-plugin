@@ -1,0 +1,20 @@
+# allow embedding through topic ids or URLs
+TopicEmbed.class_eval do
+  class << self
+    alias_method :old_topic_id_for_embed, :topic_id_for_embed
+
+    def topic_id_for_embed(embed_url)
+      # just a number
+      return embed_url.to_i if embed_url =~ /^[0-9]+$/
+
+      # /t/do-you-have-a-job/43/1
+      if embed_url =~ %r{^/t/[^/]+/([0-9]+)}
+        return $1
+      end
+
+      # fall back to old mechanism
+      old_topic_id_for_embed
+    end
+  end
+end
+
