@@ -30,3 +30,14 @@ or
 ```javascript
 discourseEmbedUrl = '/t/do-you-have-a-job/43/4';
 ```
+
+Mail Chimp Integration
+======================
+
+When a user is created (or destroyed) they are automatically subscribed (or unsubscribed)
+to a Mail Chimp mailing list.
+
+The follow environment variables must be set in the Discourse config file:
+
+- `MAILCHIMP_API_KEY` - the API key of the Mail Chimp account
+- `MAILCHIMP_LIST_ID` - the id of the list to subscribe users to (eg. `e5d8a612b1`). This can be found in the Settings area for the list.
