@@ -5,6 +5,12 @@
 
 gem 'mailchimp-api', '2.0.6', require_name: 'mailchimp'
 
+register_asset "javascripts/speakup/speakup.js"
+register_asset "javascripts/speakup/templates/speakup_template.hbs"
+register_asset "stylesheets/speakup.scss"
+
+register_custom_html(top: '<div id="speakup-inject-top" class="speakup"></div>')
+
 after_initialize do
   # load the libraries
   $:.unshift(File.expand_path('../lib', __FILE__))
