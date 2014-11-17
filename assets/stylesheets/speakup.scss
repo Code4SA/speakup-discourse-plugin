@@ -5,5 +5,10 @@
 
   // Core CSS
   @import "bootstrap/scaffolding";
+  @import "bootstrap/type";
   @import "bootstrap/grid";
+
+  #speakup-homepage {
+    margin-bottom: 10px;
+  }
 }

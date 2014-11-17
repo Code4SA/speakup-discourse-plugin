@@ -3,24 +3,33 @@ $(function($) {
     var self = this;
 
     self.init = function() {
-      // inject the content
-      $('#speakup-inject-top').html(self.render("javascripts/speakup/templates/speakup_template"));
+      self.injectContent();
 
       // show it?
-      self.toggleHomepage(window.location.pathname == '/');
+      self.toggleHomepage(window.location.pathname);
 
       Discourse.PageTracker.current().on('change', function(url) {
-        self.toggleHomepage(url == '/');
+        self.toggleHomepage(url);
       });
     };
 
     self.render = function(name) {
+      // really hacky way of rendering handlebars templates
       var buffer = [];
       Ember.TEMPLATES[name]([], {data: {buffer: buffer}});
       return buffer.join('');
     };
 
-    self.toggleHomepage = function(show) {
+    self.injectContent = function() {
+      $('#main-outlet').prepend($('<div id="speakup-inject-top"></div>'));
+      $('#speakup-inject-top').html(self.render("javascripts/speakup/templates/speakup_template"));
+    };
+
+    self.toggleHomepage = function(url) {
+      // only show for urls like "/" and "/top"
+      var show = (url.indexOf('/admin') !== 0) && 
+                 (url.split('/').length <= 2);
+
       $('#speakup-homepage').toggle(show);
     };
   };
