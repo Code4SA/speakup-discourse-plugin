@@ -5,16 +5,21 @@
 
 gem 'mailchimp-api', '2.0.6', require_name: 'mailchimp'
 
-register_asset "javascripts/speakup/speakup.js"
-register_asset "javascripts/speakup/templates/speakup_template.hbs"
-register_asset "stylesheets/speakup.scss"
-
 after_initialize do
   # load the libraries
   $:.unshift(File.expand_path('../lib', __FILE__))
 
   require 'topic_embeds'
   require 'user_mailchimp_observer'
+  require 'content_controller'
 
   User.add_observer UserMailChimpObserver.instance
+
+  Discourse::Application.routes.append do
+    mount ::MiniCmsPlugin::Engine, at: '/cms'
+  end
 end
+
+register_asset "javascripts/speakup/speakup.js"
+register_asset "javascripts/speakup/templates/speakup_template.hbs"
+register_asset "stylesheets/speakup.scss"

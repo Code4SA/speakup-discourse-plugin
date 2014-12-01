@@ -11,7 +11,7 @@ class UserMailChimpObserver < ActiveRecord::Observer
     @client = Mailchimp::API.new(ENV['MAILCHIMP_API_KEY'])
     @list_id = ENV['MAILCHIMP_LIST_ID']
 
-    if @list_id.empty?
+    if @list_id.nil? or @list_id.empty?
       raise ArgumentError.new("Please set the MAILCHIMP_LIST_ID environment variable.")
     end
   end

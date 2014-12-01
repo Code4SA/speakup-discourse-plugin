@@ -23,6 +23,10 @@ $(function($) {
     self.injectContent = function() {
       $('#main-outlet').prepend($('<div id="speakup-inject-top"></div>'));
       $('#speakup-inject-top').html(self.render("javascripts/speakup/templates/speakup_template"));
+
+      $.getJSON('/cms/homepage-banner', function(data) {
+        $('#speakup-homepage-banner').html(data.cooked);
+      });
     };
 
     self.toggleHomepage = function(url) {
