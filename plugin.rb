@@ -23,3 +23,5 @@ end
 register_asset "javascripts/speakup/speakup.js"
 register_asset "javascripts/speakup/templates/speakup_template.hbs"
 register_asset "stylesheets/speakup.scss"
+
+register_custom_html footer: File.read(File.expand_path('../assets/html/footer.html', __FILE__))
