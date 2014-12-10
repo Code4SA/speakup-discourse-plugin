@@ -20,11 +20,11 @@ class UserMailChimpObserver < ActiveRecord::Observer
   end
 
   def after_create(user)
-    subscribe_user(user) if @client
+    subscribe_user(user) if @client and not user.placeholder_email?
   end
 
   def before_destroy(user)
-    unsubscribe_user(user) if @client
+    unsubscribe_user(user) if @client and not user.placeholder_email?
   end
 
   def subscribe_user(user)

@@ -12,6 +12,7 @@ after_initialize do
   require 'topic_embeds'
   require 'user_mailchimp_observer'
   require 'content_controller'
+  require 'facebook_users'
 
   User.add_observer UserMailChimpObserver.instance
 
