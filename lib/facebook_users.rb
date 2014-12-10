@@ -3,7 +3,6 @@
 # and uniqueness requirement.
 Auth::FacebookAuthenticator.class_eval do
   alias_method :old_after_authenticate, :after_authenticate
-
   def after_authenticate(auth_token)
     result = old_after_authenticate(auth_token)
 
@@ -21,6 +20,7 @@ Auth::FacebookAuthenticator.class_eval do
     result
   end
 
+  alias_method :old_after_create_account, :after_create_account
   def after_create_account(user, auth)
     old_after_create_account(user, auth)
 
