@@ -8,20 +8,23 @@ class UserMailChimpObserver < ActiveRecord::Observer
   def initialize(*args)
     super(*args)
 
-    @client = Mailchimp::API.new(ENV['MAILCHIMP_API_KEY'])
+    api_key = ENV['MAILCHIMP_API_KEY']
     @list_id = ENV['MAILCHIMP_LIST_ID']
 
-    if @list_id.nil? or @list_id.empty?
-      raise ArgumentError.new("Please set the MAILCHIMP_LIST_ID environment variable.")
+    if Rails.env.production? and (api_key.blank? or @list_id.blank?)
+      raise ArgumentError.new("Please set the MAILCHIMP_LIST_ID and MAILCHIMP_API_KEY environment variables.")
     end
+
+    # no client indicates we're disabled
+    @client = api_key.blank? ? nil : Mailchimp::API.new(api_key)
   end
 
   def after_create(user)
-    subscribe_user(user)
+    subscribe_user(user) if @client
   end
 
   def before_destroy(user)
-    unsubscribe_user(user)
+    unsubscribe_user(user) if @client
   end
 
   def subscribe_user(user)
