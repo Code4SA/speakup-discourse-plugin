@@ -13,11 +13,13 @@ after_initialize do
   require 'user_mailchimp_observer'
   require 'content_controller'
   require 'facebook_users'
+  require 'discourse_mxit'
 
   User.add_observer UserMailChimpObserver.instance
 
   Discourse::Application.routes.append do
     mount ::MiniCmsPlugin::Engine, at: '/cms'
+    mount ::DiscourseMxit::Engine, at: '/mxit'
   end
 end
 
