@@ -110,3 +110,22 @@ module DiscourseMxit
     end
   end
 end
+
+# update User class to show MXit as a linked account
+User.class_eval do
+  def associated_accounts
+    result = []
+
+    result << "Twitter(#{twitter_user_info.screen_name})" if twitter_user_info
+    result << "Facebook(#{facebook_user_info.username})"  if facebook_user_info
+    result << "Google(#{google_user_info.email})"         if google_user_info
+    result << "Github(#{github_user_info.screen_name})"   if github_user_info
+    result << "MXit(#{oauth2_user_info.uid})"             if oauth2_user_info and oauth2_user_info.provider == 'mxit'
+
+    user_open_ids.each do |oid|
+      result << "OpenID #{oid.url[0..20]}...(#{oid.email})"
+    end
+
+    result.empty? ? I18n.t("user.no_accounts_associated") : result.join(", ")
+  end
+end
