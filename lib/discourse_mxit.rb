@@ -35,11 +35,8 @@ module DiscourseMxit
 
       mxit_id = params[:mxit_id]
       remote_ip = params[:remote_ip]
-      username = params[:username]
-      if username.present?
-        username.gsub(/[^a-zA-Z0-9_]/, '_')
-        username += '_MXit'
-      end
+      username = params[:username].gsub(/[^a-zA-Z0-9_]/, '_')
+      username += '_MXit'
 
       # are we already linked to an oauth provider?
       oauth = Oauth2UserInfo.where(provider: 'mxit', uid: mxit_id).first
@@ -62,21 +59,29 @@ module DiscourseMxit
         )
       end
 
-      # Does the user with this email exist?
-      # If it does, we simply let the mxit user act
-      # as that user.
-      user = params[:email].present? ? User.where(email: params[:email]).first : nil
+      email = params[:email]
+      if email.present?
+        # Does the user with this email exist?
+        # If it does, we simply let the mxit user act as that user.
+        user = User.where(email: email).first
+      else
+        # placeholder email
+        email = "#{mxit_id}@mxit"
+        user = nil
+      end
+
       if not user
         user_params = params.permit(
           :name,
-          :email,
-          ).merge(
-            ip_address: remote_ip,
-            registration_ip_address: remote_ip,
-            password: SecureRandom.hex,
-            username: username,
-          )
+        ).merge(
+          email: email,
+          ip_address: remote_ip,
+          registration_ip_address: remote_ip,
+          password: SecureRandom.hex,
+          username: username,
+        )
         user = User.new(user_params)
+        user.email_digests = !user.placeholder_email?
       end
 
       user.active = true

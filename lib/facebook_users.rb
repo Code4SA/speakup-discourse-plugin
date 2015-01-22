@@ -32,7 +32,8 @@ end
 # add a helper method to the user class to find these placeholder addresses
 User.class_eval do
   def placeholder_email?
-    email.end_with? "@facebook"
+    # only ends with @facebook or @mxit
+    email =~ /@\w+$/
   end
 
   # try to minimise the number of emails we send to the fake address
