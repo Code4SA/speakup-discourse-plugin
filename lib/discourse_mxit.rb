@@ -85,6 +85,7 @@ module DiscourseMxit
       end
 
       user.active = true
+      user.custom_fields['cellphone_number'] = params[:cellphone_number] if params[:cellphone_number].present?
       oauth.user = user
 
       if user.save
