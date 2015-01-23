@@ -34,9 +34,6 @@ module DiscourseMxit
       end
 
       mxit_id = params[:mxit_id]
-      remote_ip = params[:remote_ip]
-      username = params[:username].gsub(/[^a-zA-Z0-9_]/, '_')
-      username += '_MXit'
 
       # are we already linked to an oauth provider?
       oauth = Oauth2UserInfo.where(provider: 'mxit', uid: mxit_id).first
@@ -71,6 +68,9 @@ module DiscourseMxit
       end
 
       if not user
+        remote_ip = params[:remote_ip]
+        username = generate_username
+
         user_params = params.permit(
           :name,
         ).merge(
@@ -107,6 +107,24 @@ module DiscourseMxit
           values: user.attributes.slice('name', 'username', 'email')
         }
       end
+    end
+
+    protected
+    def generate_username
+      username = params[:username].gsub(/[^a-zA-Z0-9_]/, '_')
+
+      # max 20 chars, less 3 for a potential random number to prevent clashes
+      username = "MXit_#{username}"[0...User.username_length.end-3]
+
+      # ensure it's unique
+      candidate = username
+      existing = User.find_by(username_lower: candidate.downcase)
+      while not existing.nil?
+        candidate = "#{username}#{rand(999)}"
+        existing = User.find_by(username_lower: candidate.downcase)
+      end
+
+      return candidate
     end
   end
 end
