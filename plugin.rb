@@ -4,6 +4,7 @@
 # authors: Code for South Africa (@code4sa)
 
 gem 'mailchimp-api', '2.0.6', require_name: 'mailchimp'
+gem 'useragent', '0.10.0', require_name: 'useragent'
 
 after_initialize do
   # load the libraries
@@ -14,6 +15,7 @@ after_initialize do
   require 'content_controller'
   require 'facebook_users'
   require 'discourse_mxit'
+  require 'mobile_redirect'
 
   User.add_observer UserMailChimpObserver.instance
 
