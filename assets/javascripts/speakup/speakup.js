@@ -11,6 +11,12 @@ $(function($) {
       Discourse.PageTracker.current().on('change', function(url) {
         self.toggleHomepage(url);
       });
+
+      if (navigator.geolocation) {
+        $('.cllr .btn.locate')
+          .removeClass('hidden')
+          .on('click', self.councillorGeolocate);
+      }
     };
 
     self.render = function(name) {
@@ -35,6 +41,25 @@ $(function($) {
                  (url.split('/').length <= 2);
 
       $('#speakup-homepage').toggle(show);
+    };
+
+    self.councillorGeolocate = function(e) {
+      var $btn = $('.cllr .btn.locate');
+
+      function foundLocation(position) {
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
+        $('form.cllr [name=address]').val(lat + ',' + lng);
+        $('form.cllr').submit();
+      }
+
+      function noLocation() {
+        $btn.val('Use your location');
+        alert('Sorry, your browser was unable to determine your location.');
+      }
+
+      $btn.val('Locating...');
+      navigator.geolocation.getCurrentPosition(foundLocation, noLocation, {timeout:10000});
     };
   };
 

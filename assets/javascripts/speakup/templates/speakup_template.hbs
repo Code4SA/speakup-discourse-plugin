@@ -37,7 +37,18 @@
   <div id="speakup-homepage" style="display: none">
     <div class="container">
       <div class="row">
-        <div id="speakup-homepage-banner" class="col-sm-8"></div>
+        <!-- <div id="speakup-homepage-banner" class="col-sm-8"></div> -->
+        <div class="col-sm-8">
+          <h2>Who is Your Ward Councillor?</h2>
+          <h4>Find out who represents you where you live.</h4>
+
+          <form method="get" action="http://info.speakupmzansi.org.za/councillor/" class="cllr">
+            <label class="form-label" for="cllr_address">What is your address?</label>
+            <input type="text" class="form-control" id="cllr_address" name="address" value="" style="width: 400px; max-width: 100%">
+            <input type="submit" class="btn btn-primary" value="Find your councillor">
+            <input type="button" class="btn btn-default hidden locate" value="Use your browser's location">
+          </form>
+        </div>
 
         <div class="col-sm-4 hidden-xs">
           <a class="twitter-timeline" height="250" href="https://twitter.com/speakupmzansi" data-widget-id="534284291811721217">Tweets by @SpeakUpMzansi</a>
